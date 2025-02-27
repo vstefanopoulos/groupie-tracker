@@ -1,4 +1,4 @@
-.PHONI: gitback gitfront build run test
+.PHONI: git gitback gitfront build clean run test debug
 
 git:
 	git add .
