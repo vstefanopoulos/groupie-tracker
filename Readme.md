@@ -36,7 +36,7 @@
 
 1. **Clone the Repository**:
    ```bash
-   git clone https://platform.zone01.gr/git/vstefano/groupie-tracker-filters.git
+   git clone https://github.com/vstefanopoulos/groupie-tracker
    cd groupie-tracker
    ```
 
