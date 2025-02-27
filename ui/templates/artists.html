@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Artists</title>
+    <link rel="icon" type="image/x-icon" href="static/images/favicon.ico">
+    <link rel="stylesheet" href="/static/css/styles.css">
+    <script type="module" src="/static/js/main.js" defer></script>
+</head>
+<body class="artist-page">
+    <h1 class="artist-h1">Artists</h1>
+    <div class="searchbar-container">
+        <form id="search-form">
+            <input type="text" id="search-input" class="searchbar" placeholder="Search artists...">
+            <button type="submit">Search</button>
+            <button type="button" id="reset-search">Reset</button>
+        </form>
+        <div id="suggestions" class="suggestions"></div>
+    </div>
+    
+    <form id="filter-form">
+        <label for="creation-year-slider">Creation Year:</label>
+        <input type="range" id="creation-year-slider-min" name="creation_start" min="1950" max="2020" step="1" value="1950">
+        <input type="range" id="creation-year-slider-max" name="creation_end" min="1950" max="2020" step="1" value="2020">
+        <span id="creation-year-value">1950 - 2020</span>
+    
+        <label for="first-album-slider">First Album:</label>
+        <input type="range" id="first-album-slider-min" name="first_album_start" min="1950" max="2020" step="1" value="1950">
+        <input type="range" id="first-album-slider-max" name="first_album_end" min="1950" max="2020" step="1" value="2020">
+        <span id="first-album-value">1950 - 2020</span>
+    
+        <label class="number-of-members">Nº of Members:</label>
+        <div id="members-checkboxes">
+            <input type="checkbox" name="members" value="1"> 1
+            <input type="checkbox" name="members" value="2"> 2
+            <input type="checkbox" name="members" value="3"> 3
+            <input type="checkbox" name="members" value="4"> 4
+            <input type="checkbox" name="members" value="5"> 5
+            <input type="checkbox" name="members" value="6"> 6
+            <input type="checkbox" name="members" value="7"> 7
+            <input type="checkbox" name="members" value="8"> 8
+        </div>
+        <label for="location-filter">Location:</label>
+        <input type="text" id="location-filter" class="searchbar" placeholder="Enter concert location">
+    
+        <button type="submit">Apply Filters</button>
+        <button type="button" id="reset-filters">Reset</button>
+    </form>
+    <div class="artists" id = "artists-container"></div>
+</body>
+</html>

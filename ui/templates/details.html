@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <link rel="icon" type="image/x-icon" href="static/images/favicon.ico">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Artist Details</title>
+    <link rel="stylesheet" href="/static/css/styles.css">
+    <script>
+      function toggleDates(location) {
+        const dates = document.getElementById(location);
+        dates.style.display = dates.style.display === 'block' ? 'none' : 'block';
+      }
+    </script>
+  </head>
+  <body class="details-page">
+    <div class="details-container">
+      <div class="details-header">
+        <img src="{{.Artist.Image}}" alt="{{.Artist.Name}}">
+        <h1>{{.Artist.Name}}</h1>
+      </div>
+      <div class="details-section">
+        <h2>Members</h2>
+        <ul>
+          {{range .Artist.Members}}
+          <li>{{.}}</li>
+          {{end}}
+        </ul>
+      </div>
+      <div class="details-section">
+        <h2>Details</h2>
+        <p><strong>Creation Date:</strong> {{.Artist.CreationDate}}</p>
+        <p><strong>First Album:</strong> {{.Artist.FirstAlbum}}</p>
+      </div>
+      <div class="details-section concerts-section">
+        <h2>Concerts</h2>
+        {{range $location, $dates := .Relation.DatesLocations}}
+        <div>
+          <h3 onclick="toggleDates('{{$location}}')">{{format $location}}</h3>
+          <div id="{{$location}}" class="concert-dates">
+            <ul>
+              {{range $dates}}
+              <li>{{.}}</li>
+              {{end}}
+            </ul>
+          </div>
+        </div>
+        {{end}} 
+      </div>
+      <a class="back-link" href="/artists">Back to Artists</a>
+    </div>
+  </body>
+</html>
