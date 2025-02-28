@@ -1,30 +1,20 @@
 package search
 
 import (
-	commonfuncs "gp/backend/common/funcs"
 	"gp/backend/db"
+	"gp/backend/finder/shared"
 	"strconv"
 )
-
-// Range over artist locations and if
-func CheckRelations(query string, locations map[string][]string) bool {
-	for location := range locations {
-		if isContained(query, commonfuncs.Normalize(location)) {
-			return true
-		}
-	}
-	return false
-}
 
 func lookInNames(query string, artist *db.Artist, results map[int]*SearchItem) {
 	var addRank int
 	var match bool
-	name := commonfuncs.Normalize(artist.Name)
-	if startsWith(query, name) {
+	name := shared.Normalize(artist.Name)
+	if shared.StartsWith(query, name) {
 		addRank = 100
 		match = true
-	} else if isContained(query, name) {
-		addRank = 50
+	} else if shared.IsContained(query, name) {
+		addRank = 10
 		match = true
 	}
 
@@ -46,13 +36,13 @@ func lookInNames(query string, artist *db.Artist, results map[int]*SearchItem) {
 func lookInAlbum(query string, artist *db.Artist, results map[int]*SearchItem) {
 	var addRank int
 	var match bool
-	firstAlbum := commonfuncs.Normalize(artist.FirstAlbum)
-	if startsWith(query, firstAlbum) {
+	firstAlbum := shared.Normalize(artist.FirstAlbum)
+	if shared.StartsWith(query, firstAlbum) {
 		addRank = 90
 		match = true
 
-	} else if isContained(query, firstAlbum) {
-		addRank = 40
+	} else if shared.IsContained(query, firstAlbum) {
+		addRank = 10
 		match = true
 	}
 
@@ -75,12 +65,12 @@ func lookInMembers(query string, artist *db.Artist, results map[int]*SearchItem)
 	var addRank int
 	for _, member := range artist.Members {
 		match := false
-		member = commonfuncs.Normalize(member)
-		if startsWith(query, member) {
+		member = shared.Normalize(member)
+		if shared.StartsWith(query, member) {
 			addRank = 80
 			match = true
-		} else if isContained(query, member) {
-			addRank = 30
+		} else if shared.IsContained(query, member) {
+			addRank = 10
 			match = true
 		}
 
@@ -103,13 +93,13 @@ func lookInMembers(query string, artist *db.Artist, results map[int]*SearchItem)
 func lookInCreation(query string, artist *db.Artist, results map[int]*SearchItem) {
 	var addRank int
 	var match bool
-	dateStr := commonfuncs.Normalize(strconv.Itoa(artist.CreationDate))
+	dateStr := shared.Normalize(strconv.Itoa(artist.CreationDate))
 
-	if startsWith(query, dateStr) {
+	if shared.StartsWith(query, dateStr) {
 		addRank = 70
 		match = true
-	} else if isContained(query, dateStr) {
-		addRank = 20
+	} else if shared.IsContained(query, dateStr) {
+		addRank = 10
 		match = true
 	}
 
@@ -132,11 +122,11 @@ func lookInLocations(query string, artist *db.Artist, results map[int]*SearchIte
 	var addRank int
 	for location := range artist.Relation.DatesLocations {
 		match := false
-		location = commonfuncs.Normalize(location)
-		if startsWith(query, location) {
+		location = shared.Normalize(location)
+		if shared.StartsWith(query, location) {
 			addRank = 60
 			match = true
-		} else if isContained(query, location) {
+		} else if shared.IsContained(query, location) {
 			addRank = 10
 			match = true
 		}

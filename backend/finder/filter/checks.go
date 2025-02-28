@@ -1,9 +1,8 @@
 package filter
 
 import (
-	commonfuncs "gp/backend/common/funcs"
 	"gp/backend/db"
-	"gp/backend/finder/search"
+	"gp/backend/finder/shared"
 	"strconv"
 )
 
@@ -17,7 +16,7 @@ func byLocations(query string, artist *db.Artist) bool {
 		return false
 	}
 
-	if search.CheckRelations(commonfuncs.Normalize(query), artist.Relation.DatesLocations) {
+	if checkRelations(shared.Normalize(query), artist.Relation.DatesLocations) {
 		return true
 	}
 
@@ -49,4 +48,13 @@ func byCreation(searchDates []int, artist *db.Artist) bool {
 		return true
 	}
 	return artist.CreationDate >= searchDates[0] && artist.CreationDate <= searchDates[1]
+}
+
+func checkRelations(query string, locations map[string][]string) bool {
+	for location := range locations {
+		if shared.IsContained(query, shared.Normalize(location)) {
+			return true
+		}
+	}
+	return false
 }

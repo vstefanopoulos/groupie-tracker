@@ -1,8 +1,8 @@
 package search
 
 import (
-	commonfuncs "gp/backend/common/funcs"
 	"gp/backend/db"
+	"gp/backend/finder/shared"
 	"sort"
 	"strings"
 )
@@ -25,7 +25,7 @@ type SearchTags struct {
 //   - "creation-date " by creation date
 //   - "location " by tour location
 func Search(query string, dataBase []*db.Artist) []*db.Artist {
-	query = commonfuncs.Normalize(query)
+	query = shared.Normalize(query)
 
 	allTags := &SearchTags{
 		query:     query,
