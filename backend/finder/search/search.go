@@ -3,8 +3,20 @@ package search
 import (
 	commonfuncs "gp/backend/common/funcs"
 	"gp/backend/db"
+	"sort"
 	"strings"
 )
+
+type SearchItem struct {
+	Artist                                      *db.Artist
+	Rank                                        int
+	artist, members, album, creation, locations bool
+}
+
+type SearchTags struct {
+	query                                       string
+	artist, members, album, creation, locations bool
+}
 
 // Parses query first word and conducts search according to the flag:
 //   - "artist-band " by name
@@ -14,90 +26,90 @@ import (
 //   - "location " by tour location
 func Search(query string, dataBase []*db.Artist) []*db.Artist {
 	query = commonfuncs.Normalize(query)
-	searchType := strings.Fields(query)
-	if len(searchType) == 1 {
-		return searchAll(query, dataBase)
+
+	allTags := &SearchTags{
+		query:     query,
+		artist:    true,
+		members:   true,
+		album:     true,
+		creation:  true,
+		locations: true,
 	}
 
-	fmtQuery := strings.Join(searchType[1:], " ")
+	searchType := strings.Fields(query)
+	if len(searchType) == 1 {
+		return sortByRank(searchByTag(allTags, dataBase))
+	}
+
+	tags := &SearchTags{query: strings.Join(searchType[1:], " ")}
 
 	switch searchType[0] {
 	case "artist":
-		return searchName(fmtQuery, dataBase)
+		tags.artist = true
 	case "members":
-		return searchMember(fmtQuery, dataBase)
+		tags.members = true
 	case "album":
-		return searchAlbum(fmtQuery, dataBase)
+		tags.album = true
 	case "creation":
-		return searchCreation(fmtQuery, dataBase)
+		tags.creation = true
 	case "locations":
-		return searchLocation(fmtQuery, dataBase)
+		tags.locations = true
 	default:
-		return searchAll(query, dataBase)
+		tags = allTags
 	}
+
+	results := searchByTag(tags, dataBase)
+	ranked := sortByRank(results)
+	return ranked
 }
 
-func searchAll(query string, dataBase []*db.Artist) []*db.Artist {
-	feed := []*db.Artist{}
+func searchByTag(query *SearchTags, dataBase []*db.Artist) map[int]*SearchItem {
+	results := make(map[int]*SearchItem)
+
 	for _, artist := range dataBase {
-		if compareStrings(artist.Name, query) ||
-			compareStrings(artist.FirstAlbum, query) ||
-			checkMembers(query, artist.Members) ||
-			checkCreationDate(query, artist.CreationDate) ||
-			CheckRelations(query, artist.Relation.DatesLocations) {
-			feed = append(feed, artist)
+		if query.artist {
+			lookInNames(query.query, artist, results)
+		}
+
+		if query.album {
+			lookInAlbum(query.query, artist, results)
+		}
+
+		if query.members {
+			lookInMembers(query.query, artist, results)
+		}
+
+		if query.creation {
+			lookInCreation(query.query, artist, results)
+		}
+
+		if query.locations {
+			lookInLocations(query.query, artist, results)
 		}
 	}
-	return feed
+
+	return results
 }
 
-func searchName(query string, dataBase []*db.Artist) []*db.Artist {
+func sortByRank(results map[int]*SearchItem) []*db.Artist {
+	resultSlice := []*SearchItem{}
 	feed := []*db.Artist{}
-	for _, artist := range dataBase {
 
-		if compareStrings(query, commonfuncs.Normalize(artist.Name)) {
-			feed = append(feed, artist)
-		}
+	if results == nil {
+		return feed
 	}
-	return feed
-}
 
-func searchLocation(query string, dataBase []*db.Artist) []*db.Artist {
-	feed := []*db.Artist{}
-	for _, artist := range dataBase {
-		if CheckRelations(query, artist.Relation.DatesLocations) {
-			feed = append(feed, artist)
-		}
+	for _, result := range results {
+		resultSlice = append(resultSlice, result)
 	}
-	return feed
-}
 
-func searchCreation(query string, dataBase []*db.Artist) []*db.Artist {
-	feed := []*db.Artist{}
-	for _, artist := range dataBase {
-		if checkCreationDate(query, artist.CreationDate) {
-			feed = append(feed, artist)
-		}
-	}
-	return feed
-}
+	sort.Slice(resultSlice, func(i, j int) bool {
+		return resultSlice[i].Rank > resultSlice[j].Rank
+	})
 
-func searchAlbum(query string, dataBase []*db.Artist) []*db.Artist {
-	feed := []*db.Artist{}
-	for _, artist := range dataBase {
-		if compareStrings(query, artist.FirstAlbum) {
-			feed = append(feed, artist)
-		}
+	for _, result := range resultSlice {
+		feed = append(feed, result.Artist)
 	}
-	return feed
-}
 
-func searchMember(query string, dataBase []*db.Artist) []*db.Artist {
-	feed := []*db.Artist{}
-	for _, artist := range dataBase {
-		if checkMembers(query, artist.Members) {
-			feed = append(feed, artist)
-		}
-	}
 	return feed
 }
