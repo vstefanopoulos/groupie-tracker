@@ -23,7 +23,9 @@
 ## APIs
 
 - All artists 'GET' `serverAddr/api/artists`
-- Search 'GET' `serverAddr/api/search?q=query`
+- Search 'GET' `serverAddr/api/search?q=query`   
+   Search returns ranked results according to the field that the query was found (name ranks higher than first album creation) and 
+   to how many over all hits has the query in all fields of the database instance.
 - Filters 'POST' `serverAddr/api/filter`
    ```
    - Creation   []int  `json:"creation"`
