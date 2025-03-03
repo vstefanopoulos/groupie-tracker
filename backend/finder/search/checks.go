@@ -21,12 +21,12 @@ func lookInNames(query string, artist *db.Artist, results map[int]*SearchItem) {
 	if match {
 		if result, exists := results[artist.ID]; exists {
 			result.Rank += addRank
-			result.artist = true
+			result.Name = true
 		} else {
 			result = &SearchItem{
 				Artist: artist,
 				Rank:   addRank,
-				artist: true,
+				Name:   true,
 			}
 			results[artist.ID] = result
 		}
@@ -49,12 +49,12 @@ func lookInAlbum(query string, artist *db.Artist, results map[int]*SearchItem) {
 	if match {
 		if result, exists := results[artist.ID]; exists {
 			result.Rank += addRank
-			result.album = true
+			result.Album = true
 		} else {
 			result = &SearchItem{
 				Artist: artist,
 				Rank:   addRank,
-				album:  true,
+				Album:  true,
 			}
 			results[artist.ID] = result
 		}
@@ -77,12 +77,12 @@ func lookInMembers(query string, artist *db.Artist, results map[int]*SearchItem)
 		if match {
 			if result, exists := results[artist.ID]; exists {
 				result.Rank += addRank
-				result.members = true
+				result.Members = true
 			} else {
 				result = &SearchItem{
 					Artist:  artist,
 					Rank:    addRank,
-					members: true,
+					Members: true,
 				}
 				results[artist.ID] = result
 			}
@@ -106,12 +106,12 @@ func lookInCreation(query string, artist *db.Artist, results map[int]*SearchItem
 	if match {
 		if result, exists := results[artist.ID]; exists {
 			result.Rank += addRank
-			result.creation = true
+			result.Creation = true
 		} else {
 			result = &SearchItem{
 				Artist:   artist,
 				Rank:     addRank,
-				creation: true,
+				Creation: true,
 			}
 			results[artist.ID] = result
 		}
@@ -134,12 +134,12 @@ func lookInLocations(query string, artist *db.Artist, results map[int]*SearchIte
 		if match {
 			if result, exists := results[artist.ID]; exists {
 				result.Rank += addRank
-				result.locations = true
+				result.Locations = true
 			} else {
 				result = &SearchItem{
 					Artist:    artist,
 					Rank:      addRank,
-					locations: true,
+					Locations: true,
 				}
 				results[artist.ID] = result
 			}

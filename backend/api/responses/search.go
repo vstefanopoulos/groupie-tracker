@@ -12,11 +12,12 @@ func SearchAPI(w http.ResponseWriter, r *http.Request) {
 	db.Mutex.RLock()
 	defer db.Mutex.RUnlock()
 
-	feed := db.AllArtists
+	db := db.AllArtists
+	var feed []*search.SearchItem = []*search.SearchItem{}
 	if r.Method == http.MethodGet {
 		searchQuery := strings.TrimSpace(r.URL.Query().Get("q"))
 		if searchQuery != "" {
-			feed = search.Search(searchQuery, feed)
+			feed = search.Search(searchQuery, db)
 		}
 	}
 

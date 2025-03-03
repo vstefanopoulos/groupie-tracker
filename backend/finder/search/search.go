@@ -8,9 +8,9 @@ import (
 )
 
 type SearchItem struct {
-	Artist                                      *db.Artist
-	Rank                                        int
-	artist, members, album, creation, locations bool
+	Artist                                    *db.Artist
+	Rank                                      int
+	Name, Members, Album, Creation, Locations bool
 }
 
 type SearchTags struct {
@@ -24,7 +24,7 @@ type SearchTags struct {
 //   - "first-album " by first album release date
 //   - "creation-date " by creation date
 //   - "location " by tour location
-func Search(query string, dataBase []*db.Artist) []*db.Artist {
+func Search(query string, dataBase []*db.Artist) []*SearchItem {
 	query = shared.Normalize(query)
 
 	allTags := &SearchTags{
@@ -91,25 +91,20 @@ func searchByTag(query *SearchTags, dataBase []*db.Artist) map[int]*SearchItem {
 	return results
 }
 
-func sortByRank(results map[int]*SearchItem) []*db.Artist {
-	resultSlice := []*SearchItem{}
-	feed := []*db.Artist{}
+func sortByRank(results map[int]*SearchItem) []*SearchItem {
+	feed := []*SearchItem{}
 
 	if results == nil {
 		return feed
 	}
 
 	for _, result := range results {
-		resultSlice = append(resultSlice, result)
+		feed = append(feed, result)
 	}
 
-	sort.Slice(resultSlice, func(i, j int) bool {
-		return resultSlice[i].Rank > resultSlice[j].Rank
+	sort.Slice(feed, func(i, j int) bool {
+		return feed[i].Rank > feed[j].Rank
 	})
-
-	for _, result := range resultSlice {
-		feed = append(feed, result.Artist)
-	}
 
 	return feed
 }

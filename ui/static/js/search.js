@@ -1,4 +1,4 @@
-import { updateArtistsContainer } from "./ui.js";
+import { updateArtistsContainerFromSearch } from "./ui.js";
 import { fetchArtists } from "./main.js";
 
 let debounceTimer;
@@ -116,6 +116,7 @@ function showSuggestions(matchWithFields) {
 function fetchSearchResults(query) {
     fetch(`/api/search?q=${query}`)
         .then(response => response.json())
-        .then(data => updateArtistsContainer(data))
+        .then(data => updateArtistsContainerFromSearch(data))
         .catch(error => console.error("Error fetching search results:", error));
 }
+

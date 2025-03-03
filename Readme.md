@@ -1,4 +1,4 @@
-# Groupie Tracker
+# Groupie Tracker Filters
 
 **Groupie Tracker** is a web application that provides detailed information about musicians and bands, including names, their members, creation dates, first albums, locations of concerts, and dates of concerts. The application fetches data from an external API and presents it in a user-friendly interface.
 
@@ -25,7 +25,7 @@
 - All artists 'GET' `serverAddr/api/artists`
 - Search 'GET' `serverAddr/api/search?q=query`   
    Search returns ranked results according to the field that the query was found (name ranks higher than first album creation) and 
-   to how many over all hits has the query in all fields of the database instance.
+   to how many over all hits has the query in all fields of the database instance. Also provides booleans according to the filed of artist that the match was found
 - Filters 'POST' `serverAddr/api/filter`
    ```
    - Creation   []int  `json:"creation"`
@@ -38,7 +38,7 @@
 
 1. **Clone the Repository**:
    ```bash
-   git clone https://github.com/vstefanopoulos/groupie-tracker
+   git clone https://platform.zone01.gr/git/vstefano/groupie-tracker-filters.git
    cd groupie-tracker
    ```
 
